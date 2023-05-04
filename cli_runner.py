@@ -12,10 +12,14 @@ with open(csv_file_output, newline="") as infile:
     rows_csv_output = list(reader)
     fieldnames = reader.fieldnames
 
+# -----------------------------------------------------------------------------------
+
 class Match:
     def __init__(self, column, value):
         self.column = column
         self.value = value
+
+# -----------------------------------------------------------------------------------
 
 def write_rows_to_file(rows):
     with open("csv_file_outputs/csv_output.csv", "w", newline="") as outfile:
@@ -71,6 +75,7 @@ def or1(match1, match2):
     write_rows_to_file(matching_rows)
 
 
+# -----------------------------------------------------------------------------------
 # Sample Match Instances
 match_1 = Match("Netflix Exclusive", "Yes")
 match_2 = Match("Title", "Ozark")
@@ -87,4 +92,4 @@ match1(match_3)
 
 
 # NOT working: and1()
-# and1(or1(match_3, match_4), not1(match_2)) # TODO
+# and1(or1(match_3, match_4), not1(match_2))
