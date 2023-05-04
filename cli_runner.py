@@ -2,6 +2,7 @@ import csv
 
 # csv_file = 'netflix_daily_top_10.csv'
 csv_file = "netflix_short.csv"
+csv_file_output = "csv_file_outputs/csv_testing.csv"
 
 
 # Open the input CSV file and read its contents into a list of dictionaries
@@ -9,6 +10,12 @@ with open(csv_file, newline="") as infile:
     reader = csv.DictReader(infile)
     # reader.fieldnames = list of headers
     rows_csv = list(reader)
+    fieldnames = reader.fieldnames
+
+with open(csv_file_output, newline="") as infile:
+    reader = csv.DictReader(infile)
+    # reader.fieldnames = list of headers
+    rows_csv_output = list(reader)
     fieldnames = reader.fieldnames
 
 
@@ -50,6 +57,17 @@ def match1(match):
 
 def not1(match):
     """Accepts 1 match phrase"""
+
+    # nested query
+    if not match:
+        matching_rows = []
+        for row_main in rows_csv:
+            if row_main not in rows_csv_output:
+                matching_rows.append(row_main)
+        write_rows_to_file(matching_rows)
+        return
+
+    # match object
     matching_rows = []
     for row in rows_csv:
         if row[match.column] != match.value:
@@ -75,15 +93,21 @@ def or1(match1, match2):
     write_rows_to_file(matching_rows)
 
 
-match11 = Match("Netflix Exclusive", "Yes")
-match22 = Match("Type", "Movie")
-match1(match1)                      # _____
-# not1(match2)                      # WORKS
-# and1(match1, match2)              # WORKS
-# or1(match1, match2)               # _____
+match_1 = Match("Netflix Exclusive", "Yes")
+# match_2 = Match("Type", "Movie")
+match_2 = Match("Title", "Ozark")
+match_3 = Match("Rank", "1")
+match_4 = Match("Rank", "2")
+# match1(match_3)                      # WORKS
+# not1(match_2)                      # WORKS
+# and1(match_1, match_2)              # WORKS
+# or1(match_1, match_2)               # WORKS
 
+# or1(match_3, match_4)               # WORKS
+# not1(or1(match_3, match_4))         # WORKS
+and1(or1(match_3, match_4), not1(match_2))
 
-
+'AND(OR(MATCH("Rank", "1"), MATCH("Rank", "2")), NOT(MATCH("Title", "Ozark")))'
 
 """
 FUNCTIONALITIES
